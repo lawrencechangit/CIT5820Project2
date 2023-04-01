@@ -47,8 +47,6 @@ def process_order(order):
     pass
 
     if id_order_matched!=0:
-        print("There is an order matched!")
-        print("ID of order matched: ", id_order_matched)
         existing_order_sell_amount = 0
         existing_order_buy_amount=0
         existing_order_sell_rate= 0
@@ -72,14 +70,12 @@ def process_order(order):
         query2 = session.query(Order).filter(Order.id == new_order_ID)
         result2 = session.execute(query2)
         for order in result2.scalars().all():
-            print("running here")
             order.filled = now
             order.counterparty_id = id_order_matched
             session.commit()
         child_order_obj=None
 
         if existing_order_sell_amount<buy_amount:
-            print("New order not fully matched")
             final_sell_amount=existing_order_sell_amount
             final_buy_amount=existing_order_buy_amount
 
@@ -128,9 +124,6 @@ def process_order(order):
             child_order['buy_amount']=buy_amount
             child_order['sell_amount'] = sell_amount
             child_order['creator_id'] = creator_id
-
-            print("buy amount is ", buy_amount)
-            print("sell amount is ", sell_amount)
 
             child_order_obj = Order(sender_pk=child_order['sender_pk'],
                                     receiver_pk=child_order['receiver_pk'],
